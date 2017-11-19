@@ -11840,7 +11840,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># 检查你的Python版本</span>
@@ -11856,7 +11856,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Import the visualization code</span>
@@ -11907,7 +11907,7 @@ div#notebook {
 <p><strong>回答：</strong></p>
 <ol>
 <li>智能出租车未发生移动。</li>
-<li>当从红灯变为绿灯时，因出租车不发生移动，奖励逐渐增加。当从绿灯变为红灯时，因出租车不移动，而按照交通规则需要动，故奖励逐渐变少。以此循环往复。</li>
+<li>当从绿灯变为红灯时，因出租车不发生移动，奖励逐渐增加，由负变为正。当从红灯变为绿灯时，因出租车不移动，而按照交通规则需要动，故奖励逐渐变少，由正变为负。以此循环往复。</li>
 </ol>
 
 </div>
@@ -11946,9 +11946,9 @@ div#notebook {
 <p><strong>回答：</strong></p>
 <ol>
 <li>3个flag:<ol>
-<li><code>learning</code> 控制该agent是否处于学习模式</li>
-<li><code>epsilon</code> 随机探索参数</li>
-<li><code>alpha</code> 学习参数</li>
+<li><code>learning</code> 控制该agent是否使用Q-learning算法进行学习。learning为True时，使用Q-learning学习，为False时不使用Q-learning学习。</li>
+<li><code>epsilon</code> 随机探索参数。如果该值比较小，那么将不能得到学习，因为它认为当前是安全的。如果该值比较大，那么将不断冒险尝试。</li>
+<li><code>alpha</code> 学习参数, 表示之前学到的行为有多少会迭代到新的学习里面。为0表示该程序永远不会改变它的行为，为1表示已经学到的行为都会被丢弃掉，。0.5表示取之前学到的和现在学的一个平均。</li>
 </ol>
 </li>
 <li>调用的是<code>Environment</code>的<code>act</code>函数</li>
@@ -13128,7 +13128,11 @@ AElFTkSuQmCC
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>答案：</strong></p>
-<p>该驾驶代理程序经常做出错误的决定。例如接近40%的被视为坏的，20%的违反交通规则，5%的主要事故。平均得到负的奖励。所有的都没有到达目的地，但是这也是很正常的，因为所有的决定都是随机做出的。另外该出租车的性能并没有随着时间的增加而变好，因为随机的决定并不是一个自学习算法。总体来讲，它不可靠，无法自学习，高度不安全。</p>
+<p>该驾驶代理程序经常做出错误的决定。例如接近40%的被视为不良决策的，其中11%左右是事故。</p>
+<p>可靠率是合理的，因为总共4个行为，随机做出选择有25%的可能成功。还有一些其它控制因素，所以误差在15%左右都是可以接受的。</p>
+<p>平均得到负的奖励，表明它是收到了严重的惩罚。</p>
+<p>另外该出租车的性能并没有随着时间的增加而变好，因为随机的决定并不是一个自学习算法。</p>
+<p>总体来讲，它不可靠，无法自学习，高度不安全。</p>
 
 </div>
 </div>
@@ -13183,7 +13187,7 @@ AElFTkSuQmCC
 <p><strong>回答：</strong></p>
 <p>从安全性上来讲，inputs变量包含的所有信息都是必须的，这样才可以确保出租车遵守该规则。inputs变量包含灯的状态，以及是否有车在某个方向驶过来。
 从效率上讲，出租车需要waypoint信息。waypoint指导出租车接下来去哪个方向。</p>
-<p>有些特征不总是在学习中有用，例如deadline信息，因为在这个恰当的策略里面，出租车总是尽量快地去往目的地，并且遵守交通法规。我们不希望出租车为了赶上deadline，而破坏交通法规。而且该特定题目下，起点和终点不停的改变，也会影响泛化能力。增加该参数会增加问题的状态空间。right也没有用，因为美国的交通规则是靠右行驶。</p>
+<p>有些特征不总是在学习中有用，例如deadline信息，因为在这个恰当的策略里面，出租车总是尽量快地去往目的地，并且遵守交通法规。我们不希望出租车为了赶上deadline，而破坏交通法规。而且该特定题目下，起点和终点不停的改变，也会影响泛化能力。增加该参数会增加问题的状态空间。</p>
 
 </div>
 </div>
@@ -13222,10 +13226,10 @@ AElFTkSuQmCC
 <ol>
 <li><p>light: green 和 red 共2种可能</p>
 </li>
-<li><p>left， 'oncoming' 和 'right': 'None', 'left, 'right', 'forward' 每个有4种可能。</p>
+<li><p>left， oncoming 和 right: 'None', 'left, 'right', 'forward' 每个有4种可能。</p>
 </li>
 </ol>
-<p>状态空间: 3 x 2 x 4 x 4=96.</p>
+<p>状态空间: 3 x 2 x 4 x 4 x 4=384.</p>
 <p>该问题空间对于Q learing算法来说是可以处理的。</p>
 
 </div>
@@ -14521,14 +14525,16 @@ AgAA2InAAgAA2InAAgAA2InAAgAA2MkfGjJKQTy5P+QAAAAASUVORK5CYII=
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>回答：</strong></p>
-<p>当比较基本的驾驶代理程序和默认Q-learning代理程序时，整体评分是一样的，都是safety F和reliability F。单从这个分数看来，似乎这意味着Q-learing模型没有提高。</p>
+<p>当比较基本的驾驶代理程序和默认Q-learning代理程序时，Safety Rating是一样的，Reliability Rating有了提高从F变为了B。单从这个分数看来，似乎这意味着Q-learing模型没有很大的提高。</p>
 <p>然而，所有的坏的行为都通过Q-learing模型有了很大的减少:</p>
 <p>Major Viloations从14%降到了7%</p>
 <p>Major Accidents从8%降到了5%</p>
 <p>Minor Violations从9%降到了0.01%</p>
 <p>Minor Accidents从5%降到了0.01%</p>
+<p>在测试之前需要做20次左右训练试验。这个数字是合理的因为epsilon每次递减0.05， 1/0.05=20</p>
+<p>衰减函数epsilon正确的在面板中显示了，呈线性下降。</p>
 <p>Major的坏行为得到了显著的减少通过Q-learning的学习。average reward也从-4.0 增加到 -1.0.</p>
-<p>跟之前相比，Safety的得分仍然是F。该smartcab是不足够崇明岛做正确的决定。</p>
+<p>跟之前相比，Safety的得分仍然是F。该smartcab是不足够聪明到做正确的决定。</p>
 <p>跟之前相比Reliability 的得分是B, 比之前好多了。</p>
 <p>总体来讲，Q-learning仍然表现较差，仍然需要优化得到一个更强，更好的模型。</p>
 
@@ -16219,7 +16225,7 @@ TkSuQmCC
 <p><strong>回答：</strong></p>
 <p>使用了 epsilon = e^(-0.02 * t) 衰减函数。</p>
 <p>在测试之前大约进行了250次训练。</p>
-<p>使用了epsilon tolerance=0.01， alpha = 0.8。选择这些值基本上是为了提高性能，我通过调节它们得到最好的性能。</p>
+<p>使用了epsilon tolerance=0.01， alpha 初始值 设为0.8 然后每次下降0.02直到alpha等于0.2。之所以将alpha进行衰减是为了逐渐降低新的行为的学习的比重，增加已学到的行为的比重，这样会使学习器更稳定。选择这些值基本上是为了提高性能，我通过调节它们得到最好的性能。</p>
 <p>跟之前默认的Q-learning学习器相比，该Q-learning学习器有很大的提高。
 Safety得分由F提高到A+。
 Reliability得分由F提高到A+。
@@ -16255,11 +16261,11 @@ Reliability得分由F提高到A+。
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>回答：</strong> 
-最优的策略如下：
-当waypoint是right，如果有车从左边驶来，该代理需要等待，否则直接向右行驶。
-当waypoint是forward，如果交通灯是绿色的，直接向前行驶，否则等待。
-当waypoint时向left,如果交通灯是绿色的，而前方的车是在向左或者没有车辆，那么向左行驶。如果交通灯是红色的，那么等待。</p>
+<p><strong>回答：</strong></p>
+<p>最优的策略是在不违背交通规则的情况下选择前行的方向或者不前行例如：</p>
+<p>当waypoint是right，如果有车从左边驶来，该代理需要等待，否则直接向右行驶。</p>
+<p>当waypoint是forward，如果交通灯是绿色的，直接向前行驶，否则等待。</p>
+<p>当waypoint时向left,如果交通灯是绿色的，而前方的车是在向左或者没有车辆，那么向左行驶。如果交通灯是红色的，那么等待。</p>
 <p>当我查看sim_improved-learning.txt,我发现了相同state的如下策略:
 forward_red_None_None</p>
 <ul>
@@ -16269,15 +16275,6 @@ forward_red_None_None</p>
 <li>None : 1.35</li>
 </ul>
 <p>这是强化学习的结果。 action中值最大的是None，跟我们做出的最优策略的判断是一致的。同时它也学习到了一个次优的策略right(值未0.19),也是跟我们的判断一致。</p>
-<p>我在sim-improved-learning.txt中找到了Q-Learing代理程序学到的次优的策略如下:
-forward_red_right_right</p>
-<ul>
-<li>forward : -0.11</li>
-<li>left : 0.00</li>
-<li>right : 0.00</li>
-<li>None : 0.00</li>
-</ul>
-<p>在该状态中，最终优化的Q-Learning代理程序当红灯时不会向前走，但是可能向左，向右或者等待，因为它们的值都为0.向左转跟交通规则相悖。我猜测它之所以可以向左转是因为，它没有遇到当在红灯时向左转造成时会造成不好的行为，并且负的奖励。</p>
 
 </div>
 </div>

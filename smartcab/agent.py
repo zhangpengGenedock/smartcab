@@ -88,7 +88,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'])
+        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right'])
 
         self.prev_state = state
         return state
@@ -102,11 +102,7 @@ class LearningAgent(Agent):
         ###########
         # Calculate the maximum Q-value of all actions for a given state
 
-        maxQ = None
-
-        for key in self.Q[state]:
-            if (maxQ == None) or (maxQ < self.Q[state][key]):
-                maxQ = self.Q[state][key]
+        maxQ = max(self.Q[state].values())
 
         return maxQ
 
@@ -167,7 +163,7 @@ class LearningAgent(Agent):
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
 
         if self.learning:
-            self.Q[self.state][action] = (1.0 - self.alpha) * self.Q[self.state][action] + (self.alpha) * (reward)
+            self.Q[self.state][action] = (1.0 - self.alpha) * self.Q[self.state][action] + self.alpha * reward
 
         return
 
